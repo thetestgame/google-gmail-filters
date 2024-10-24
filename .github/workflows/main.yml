@@ -1,0 +1,33 @@
+name: Setup and Deploy Filters
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup-and-deploy-filters:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Install Snapd
+      run: sudo apt update && sudo apt install -y snapd
+
+    - name: Install gmailctl with Snap
+      run: sudo snap install gmailctl
+
+    - name: Create Config Directory
+      run: mkdir -p ~/snap/gmailctl/13/.gmailctl
+
+    - name: Create credentials.json
+      run: echo "${{ secrets.GMAILCTL_CREDENTIALS }}" > ~/snap/gmailctl/13/.gmailctl/credentials.json
+
+    - name: Create token.json
+      run: echo "${{ secrets.GMAILCTL_TOKEN }}" > ~/snap/gmailctl/13/.gmailctl/token.json
+
+    - name: Initialize gmailctl
+      run: |
+        ls -la ~/snap/gmailctl/13/.gmailctl
+        gmailctl init
+
