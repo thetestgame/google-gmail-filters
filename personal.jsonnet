@@ -15,40 +15,21 @@ local purchasesLabel = "Purchases";
 local financialLabel = "Financial";
 local developmentLabel = "Development";
 
-// List of filters to use for automatic spam detection.
-// This is a list of common spam email subjects and senders
-// that are used to identify spam emails.
-// 
-// This list also covers automatic folder clean up rules.
-local spam = {
-    or: [
-        // Spam
-        { query: "Pre-approved" },   
-        { query: "CarShield" },
-        { query: "ENDURANCE AUTO" },
-        { query: "Auto Insurance" },
-        { query: "AutoInsurance" },
-        { query: "insurance -{chase, affirm}" },
-        { query: "LinkedIn Job Alerts" },
-        {
-            subject: "Your Prime Gaming claim is confirmed",
-            isEscaped: true
-        },
-        { from: "calendar-notification@google.com" },
-        { from: "redditmail.com" },
-        { from: "mail.coinbase.com" },
-        { from: "*.smartweak.com" },
-        {
-            subject: "Shop together with",
-            isEscaped: true
-        },
+// List of filters to use for automatic cleanup.
+local cleanupFilter = {
+  or: [
+    // Custom
+    { query: "label:deliveries older_than:3d" },
+    { query: "label:financial older_than:3d" },
+    { query: "label:development older_than:3d" },
+    { query: "label:shopping older_than:3d" },
 
-        // Clean up
-        { query: "label:deliveries older_than:3d" },
-        { query: "label:financial older_than:3d" },
-        { query: "label:development older_than:3d" },
-        { query: "label:shopping older_than:3d" },
-    ],
+    // Built In
+    { query: "category:promotions older_than:3d" },
+    { query: "category:social older_than:3d" },
+    { query: "category:forums older_than:3d" },
+    { query: "category:updates older_than:3d" },
+  ]
 };
 
 // List of filters to use for automatic delivery email sorting.
@@ -129,15 +110,51 @@ local developmentFilter = {
     ],
 };
 
+// List of filters to use for automatic spam detection.
+// This is a list of common spam email subjects and senders
+// that are used to identify spam emails.
+local spamFilter = {
+    and: [
+      {
+        or: [
+            // Spam
+            { query: "Pre-approved" },   
+            { query: "CarShield" },
+            { query: "ENDURANCE AUTO" },
+            { query: "Auto Insurance" },
+            { query: "AutoInsurance" },
+            { query: "insurance -{chase, affirm}" },
+            { query: "LinkedIn Job Alerts" },
+            {
+                subject: "Your Prime Gaming claim is confirmed",
+                isEscaped: true
+            },
+            { from: "calendar-notification@google.com" },
+            { from: "redditmail.com" },
+            { from: "mail.coinbase.com" },
+            { from: "*.smartweak.com" },
+            {
+                subject: "Shop together with",
+                isEscaped: true
+            },
+        ],
+      },
+
+      // If it matches any of the other filters, it's not spam.
+      { not: deliveriesFilter },
+      { not: purchasesFilter },
+      { not: financialFilter },
+      { not: developmentFilter },
+    ],
+};
+
 // Generates a folder rule for a given set of filters and label.
 local FolderRule(filters, label) = {
     filter: filters,
     actions: {
         archive: true,
         markSpam: false,
-        labels: [
-            label
-        ]
+        labels: [label],
     }
 };
 
@@ -149,15 +166,7 @@ local FolderRule(filters, label) = {
     email: me
   },
 
-  // Note: labels management is optional. If you prefer to use the
-  // GMail interface to add and remove labels, you can safely remove
-  // this section of the config.
   labels: [
-    // Built in folders
-    { name: "[Imap]/Drafts" },
-    { name: "Conversation History" },
-
-    // Custom
     { name: savedInfoLabel },
     { name: deliveriesLabel },
     { name: purchasesLabel },
@@ -170,21 +179,23 @@ local FolderRule(filters, label) = {
     // Mark emails going to my primary public email as important. 
     // Someone is likely trying to reach me directly.
     {
-      filter: {
-        to: me
-      },
+      filter: { to: me },
       actions: {
         markImportant: true,
         markSpam: false,
       }
     },
 
-    // Automatically identify spam emails and delete them
+    // Automatically identify spam emails and delete them.
+    // This same rule also handles automatic cleanup of old emails.
     {
-        filter: spam,
-        actions: {
-            delete: true,
+        filter: {
+            or: [
+                spamFilter,
+                cleanupFilter,
+            ],
         },
+        actions: { delete: true },
     },
   
     // Automatically sort emails into folders
