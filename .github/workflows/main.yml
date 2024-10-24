@@ -34,3 +34,5 @@ jobs:
         ls -la ~/snap/gmailctl/13/.gmailctl
         gmailctl init
 
+    - name: Apply Filters
+      run: gmailctl apply -f personal.jsonnet
