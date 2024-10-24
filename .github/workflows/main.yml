@@ -11,6 +11,9 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
+    - name: Install jq
+      run: sudo apt update && sudo apt install -y jq
+
     - name: Install Snapd
       run: sudo apt update && sudo apt install -y snapd
 
@@ -21,10 +24,10 @@ jobs:
       run: mkdir -p ~/snap/gmailctl/13/.gmailctl
 
     - name: Create credentials.json
-      run: echo "${{ secrets.GMAILCTL_CREDENTIALS }}" > ~/snap/gmailctl/13/.gmailctl/credentials.json
+      run: echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > ~/snap/gmailctl/13/.gmailctl/credentials.json
 
     - name: Create token.json
-      run: echo "${{ secrets.GMAILCTL_TOKEN }}" > ~/snap/gmailctl/13/.gmailctl/token.json
+      run: echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > ~/snap/gmailctl/13/.gmailctl/token.json
 
     - name: Initialize gmailctl
       run: |
