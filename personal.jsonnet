@@ -188,9 +188,9 @@ local FolderRule(filters, label) = {
     },
   
     // Automatically sort emails into folders
-    FolderRule(deliveriesFilter, deliveriesLabel),       // Automatically sort delivery emails into the Shopping/Deliveries label
-    FolderRule(purchasesFilter, purchasesLabel), // Automatically sort purchase confirmation emails into the Purchase Confirmations labels
-    FolderRule(financialFilter, financialLabel),         // Automatically sort financial emails into the Financial label
-    FolderRule(developmentFilter, developmentLabel)      // Automatically sort development emails into the Development label
+    FolderRule(deliveriesFilter, deliveriesLabel),      // Automatically sort delivery emails into the Shopping/Deliveries label
+    FolderRule(purchasesFilter, purchasesLabel),        // Automatically sort purchase confirmation emails into the Purchase Confirmations labels
+    FolderRule(financialFilter, financialLabel),        // Automatically sort financial emails into the Financial label
+    FolderRule(developmentFilter, developmentLabel)     // Automatically sort development emails into the Development label
   ]
 }
