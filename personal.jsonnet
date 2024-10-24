@@ -4,8 +4,16 @@
 
 local lib = import 'gmailctl.libsonnet';
 
-// Variables for common email addresses
+// Variables for common email addresses and personal information
+local name = 'Jordan Maxwell';
 local me = 'me@jordan-maxwell.info';
+
+// Constants for folder names
+local savedInfoLabel = "Saved Info";
+local deliveriesLabel = "Deliveries";
+local purchasesLabel = "Purchases";
+local financialLabel = "Financial";
+local developmentLabel = "Development";
 
 // List of filters to use for automatic spam detection.
 // This is a list of common spam email subjects and senders
@@ -46,7 +54,7 @@ local spam = {
 // List of filters to use for automatic delivery email sorting.
 // This is a list of common delivery email addresses and subjects
 // that are used to identify delivery emails.
-local deliveries = {
+local deliveriesFilter = {
     or: [
         { from: 'USPS' },
         { from: "order-update@amazon.com" },
@@ -60,7 +68,7 @@ local deliveries = {
 // List of filters to use for automatic purchase confirmation sorting.
 // This is a list of common purchase confirmation email addresses and subjects
 // that are used to identify purchase confirmation emails.
-local confirmations = {
+local purchasesFilter = {
     or: [
         { query: "confirmation" },
         { query: "receipt" },
@@ -91,7 +99,7 @@ local confirmations = {
 // List of filters to use for automatic financial email sorting.
 // This is a list of common financial email addresses and subjects
 // that are used to identify financial emails.
-local financial = {
+local financialFilter = {
     or: [
         { query: "SoFI" },
         { from: "affirm.com" },
@@ -109,7 +117,7 @@ local financial = {
 // that are used to identify development emails.
 //
 // This list ignores emails matching the confirmations filter.
-local development = {
+local developmentFilter = {
     and: [
         {
             or: [
@@ -117,15 +125,27 @@ local development = {
                 { from: "noreply@kronnect.com" },
             ],
         },
-        { not: confirmations },
+        { not: purchasesFilter },
     ],
+};
+
+// Generates a folder rule for a given set of filters and label.
+local FolderRule(filters, label) = {
+    filter: filters,
+    actions: {
+        archive: true,
+        markSpam: false,
+        labels: [
+            label
+        ]
+    }
 };
 
 // Define our gmail rules for managing emails.
 {
   version: "v1alpha3",
   author: {
-    name: "Jordan Maxwell",
+    name: name,
     email: me
   },
 
@@ -133,13 +153,16 @@ local development = {
   // GMail interface to add and remove labels, you can safely remove
   // this section of the config.
   labels: [
-    { name: "Saved Info" },
+    // Built in folders
     { name: "[Imap]/Drafts" },
     { name: "Conversation History" },
-    { name: "Financial" },
-    { name: "Deliveries" },
-    { name: "Development" },
-    { name: "Purchase Confirmations" }
+
+    // Custom
+    { name: savedInfoLabel },
+    { name: deliveriesLabel },
+    { name: purchasesLabel },
+    { name: financialLabel },
+    { name: developmentLabel },
   ],
 
   // Filters to apply to incoming messages
@@ -156,19 +179,6 @@ local development = {
       }
     },
 
-
-    // Automatically sort delivery emails into the Shopping/Deliveries label
-    {
-      filter: deliveries,
-      actions: {
-        archive: true,
-        markSpam: false,
-        labels: [
-          "Deliveries"
-        ]
-      }
-    },
-
     // Automatically identify spam emails and delete them
     {
         filter: spam,
@@ -176,41 +186,11 @@ local development = {
             delete: true,
         },
     },
-
-    // Automatically sort purchase confirmation emails into the Purchase Confirmations labels
-    {
-      filter: confirmations,
-      actions: {
-        archive: true,
-        markSpam: false,
-        labels: [
-          "Purchase Confirmations"
-        ]
-      }
-    },
-
-    // Automatically sort financial emails into the Financial label
-    {
-      filter: financial,
-      actions: {
-        archive: true,
-        labels: [
-          "Financial"
-        ]
-      }
-    },
-
-    // Automatically sort development emails into the Development label
-    {
-      filter: development,
-      actions: {
-        archive: true,
-        markSpam: false,
-        markImportant: true,
-        labels: [
-          "Development"
-        ]
-      }
-    },
+  
+    // Automatically sort emails into folders
+    FolderRule(deliveriesFilter, deliveriesLabel),       // Automatically sort delivery emails into the Shopping/Deliveries label
+    FolderRule(purchasesFilter, purchasesLabel), // Automatically sort purchase confirmation emails into the Purchase Confirmations labels
+    FolderRule(financialFilter, financialLabel),         // Automatically sort financial emails into the Financial label
+    FolderRule(developmentFilter, developmentLabel)      // Automatically sort development emails into the Development label
   ]
 }
