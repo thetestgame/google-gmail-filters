@@ -27,6 +27,9 @@ local spam = {
             isEscaped: true
         },
         { from: "calendar-notification@google.com" },
+        { from: "redditmail.com" },
+        { from: "mail.coinbase.com" },
+        { from: "*.smartweak.com" },
         {
             subject: "Shop together with",
             isEscaped: true
