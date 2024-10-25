@@ -114,46 +114,38 @@ local developmentFilter = {
 // This is a list of common spam email subjects and senders
 // that are used to identify spam emails.
 local spamFilter = {
-    and: [
-      {
-        or: [
-            // Spam
-            { query: "Pre-approved" },   
-            { query: "CarShield" },
-            { query: "ENDURANCE AUTO" },
-            { query: "Auto Insurance" },
-            { query: "AutoInsurance" },
-            { query: "insurance -{chase, affirm}" },
-            { query: "LinkedIn Job Alerts" },
-            {
-                subject: "Your Prime Gaming claim is confirmed",
-                isEscaped: true
-            },
-            { from: "calendar-notification@google.com" },
-            { from: "redditmail.com" },
-            { from: "mail.coinbase.com" },
-            { from: "*.smartweak.com" },
-            {
-                subject: "Shop together with",
-                isEscaped: true
-            },
-        ],
-      },
-
-      // If it matches any of the other filters, it's not spam.
-      { not: deliveriesFilter },
-      { not: purchasesFilter },
-      { not: financialFilter },
-      { not: developmentFilter },
-    ],
+  or: [
+    // Spam
+    { query: "Pre-approved" },   
+    { query: "CarShield" },
+    { query: "ENDURANCE AUTO" },
+    { query: "Auto Insurance" },
+    { query: "AutoInsurance" },
+    { query: "insurance -{chase, affirm}" },
+    { query: "LinkedIn Job Alerts" },
+    {
+      subject: "Your Prime Gaming claim is confirmed",
+      isEscaped: true
+    },
+    { from: "calendar-notification@google.com" },
+    { from: "redditmail.com" },
+    { from: "mail.coinbase.com" },
+    { from: "*.smartweak.com" },
+    { from: "midjourney.com" },
+    {
+      subject: "Shop together with",
+      isEscaped: true
+    },
+  ],
 };
 
 // Generates a folder rule for a given set of filters and label.
 local FolderRule(filters, label) = {
     filter: filters,
     actions: {
-        archive: true,
+        archive: false,
         markSpam: false,
+        delete: false,
         labels: [label],
     }
 };
@@ -191,11 +183,11 @@ local FolderRule(filters, label) = {
     {
         filter: {
             or: [
-                spamFilter,
-                cleanupFilter,
-            ],
-        },
-        actions: { delete: true },
+              spamFilter,
+              cleanupFilter,
+          ],
+      },
+      actions: { delete: true },
     },
   
     // Automatically sort emails into folders

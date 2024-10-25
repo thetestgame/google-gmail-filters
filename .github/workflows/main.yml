@@ -38,4 +38,4 @@ jobs:
         gmailctl init
 
     - name: Apply Filters
-      run: gmailctl apply -f personal.jsonnet
+      run: gmailctl apply -f filters.jsonnet
