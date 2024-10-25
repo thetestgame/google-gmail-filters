@@ -32,10 +32,7 @@ jobs:
     - name: Create token.json
       run: echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > ~/snap/gmailctl/13/.gmailctl/token.json
 
-    - name: Initialize gmailctl
+    - name: Aply Filters
       run: |
-        ls -la ~/snap/gmailctl/13/.gmailctl
         gmailctl init
-
-    - name: Apply Filters
-      run: gmailctl apply -f filters.jsonnet
+        gmailctl apply -f filters.jsonnet
