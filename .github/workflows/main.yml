@@ -14,25 +14,25 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
-
+    
+    - name: Set file permissions
+      run: sudo find . -type f -exec chmod 644 {} \; && sudo find . -type d -exec chmod 755 {} \;
+  
     - name: Install jq
       run: sudo apt update && sudo apt install -y jq
-
+  
     - name: Install Snapd and GmailCTL
       run: |
         sudo apt update && sudo apt install -y snapd
         sudo snap install gmailctl
-
+  
     - name: Create configuration files
       run: |
         sudo mkdir -p /root/snap/gmailctl/13/.gmailctl
         echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' | sudo tee /root/snap/gmailctl/13/.gmailctl/credentials.json > /dev/null
         echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' | sudo tee /root/snap/gmailctl/13/.gmailctl/token.json > /dev/null
-
-    - name: Set file permissions
-      run: sudo chown root:root ./filters.jsonnet && sudo chmod 644 ./filters.jsonnet
-
+  
     - name: Init GmailCTL and apply filters
       run: |
-        sudo gmailctl init
-        sudo gmailctl apply -f ./filters.jsonnet -y
+        sudo bash -c "gmailctl init"
+        sudo bash -c "gmailctl apply -f ./filters.jsonnet -y"
