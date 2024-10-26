@@ -1,30 +1,17 @@
-// JsonNet file for generating Gmail filters for my personal email account.
-// This file contains a list of filters to apply to incoming messages
-// to automatically sort them into labels and mark them as spam.
+// This file contains the filters used to automatically sort emails into different labels.
+// It contains filters for important emails, cleanup, deliveries, purchases, financial, development, and spam.
 
 local lib = import 'gmailctl.libsonnet';
+local constants = import 'constants.jsonnet';
+
 local financialEmails = import 'data/financial.json';
 local carrierEmails = import 'data/carriers.json';
 local spamEmails = import 'data/spam.json';
 
-// Variables for common email addresses and personal information
-local name = 'Jordan Maxwell';
-
-local me = 'me@jordan-maxwell.info';
-local spam = 'spam@jordan-maxwell.info';
-local alice = 'alice@jordan-maxwell.info';
-
-// Constants for folder names
-local savedInfoLabel = "Saved Info";
-local deliveriesLabel = "Deliveries";
-local purchasesLabel = "Purchases";
-local financialLabel = "Financial";
-local developmentLabel = "Development";
-
 local importantFilters = {
   or: [
-    { to: me },
-    { to: alice },
+    { to: constants.me },
+    { to: constants.alice },
   ]
 };
 
@@ -140,69 +127,19 @@ local spamFilter = {
     // Person spam email
     { 
       or: [
-        { to: spam }
+        { to: constants.spam }
       ]
     }
   ],
 };
 
-// Generates a folder rule for a given set of filters and label.
-local FolderRule(filters, label) = {
-  filter: filters,
-  actions: {
-      archive: true,
-      markSpam: false,
-      delete: false,
-      labels: [label],
-  }
-};
-
-// Generates a delete rule for a given set of filters.
-local DeleteRule(filters) = {
-  filter: filters,
-  actions: { delete: true },
-};
-
-// Generates a rule for marking emails as important and ensuring
-// they are not marked as spam.
-local MarkImportant(filters) = {
-  filter: filters,
-  actions: { 
-    markImportant: true,
-    markSpam: false,
-  },
-};
-
-// Define our gmail rules for managing emails.
+// Export the filters for use in other files
 {
-  version: "v1alpha3",
-  author: {
-    name: name,
-    email: me
-  },
-
-  labels: [
-    { name: savedInfoLabel },
-    { name: deliveriesLabel },
-    { name: purchasesLabel },
-    { name: financialLabel },
-    { name: developmentLabel },
-  ],
-
-  // Filters to apply to incoming messages
-  rules: [
-    // Mark emails going to my primary public emails as important. 
-    // Someone is likely trying to reach me directly.
-    MarkImportant(importantFilters),
-
-    // Apply our automatic deletion rules
-    DeleteRule(spamFilter),     // Automatically delete emails from known spam senders
-    DeleteRule(cleanupFilter),  // Automatically delete old emails
-  
-    // Automatically sort emails into folders
-    FolderRule(deliveriesFilter, deliveriesLabel),      // Automatically sort delivery emails into the Shopping/Deliveries label
-    FolderRule(purchasesFilter, purchasesLabel),        // Automatically sort purchase confirmation emails into the Purchase Confirmations labels
-    FolderRule(financialFilter, financialLabel),        // Automatically sort financial emails into the Financial label
-    FolderRule(developmentFilter, developmentLabel)     // Automatically sort development emails into the Development label
-  ]
+  importantFilters: importantFilters,
+  cleanupFilter: cleanupFilter,
+  deliveriesFilter: deliveriesFilter,
+  purchasesFilter: purchasesFilter,
+  financialFilter: financialFilter,
+  developmentFilter: developmentFilter,
+  spamFilter: spamFilter,
 }

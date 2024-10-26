@@ -1,0 +1,30 @@
+
+// Variables for common email addresses and personal information
+local name = 'Jordan Maxwell';
+
+local me = 'me@jordan-maxwell.info';
+local spam = 'spam@jordan-maxwell.info';
+local alice = 'alice@jordan-maxwell.info';
+
+// Constants for folder names
+local savedInfoLabel = "Saved Info";
+local deliveriesLabel = "Deliveries";
+local purchasesLabel = "Purchases";
+local financialLabel = "Financial";
+local developmentLabel = "Development";
+
+// Export the constants for use in other files
+{
+    // Variables for common email addresses and personal information
+    name: name,
+    me: me,
+    spam: spam,
+    alice: alice,
+
+    // Constants for folder names
+    savedInfoLabel: savedInfoLabel,
+    deliveriesLabel: deliveriesLabel,
+    purchasesLabel: purchasesLabel,
+    financialLabel: financialLabel,
+    developmentLabel: developmentLabel
+}
