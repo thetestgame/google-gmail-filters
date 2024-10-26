@@ -1,3 +1,5 @@
+// This file is a JSONnet file that defines constants and variables for use in other files. It includes variables for common email addresses and personal information, 
+// as well as constants for folder names. The file also includes functions for generating folder rules and delete rules based on filters and labels.
 
 // Variables for common email addresses and personal information
 local name = 'Jordan Maxwell';
