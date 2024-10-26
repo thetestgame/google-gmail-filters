@@ -25,7 +25,7 @@ jobs:
       run: sudo snap install gmailctl
 
     - name: Create Config Directory
-      run: mkdir -p /root/snap/gmailctl/13/.gmailctl
+      run: sudo mkdir -p /root/snap/gmailctl/13/.gmailctl
 
     - name: Create credentials.json
       run: sudo echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/credentials.json
