@@ -25,13 +25,13 @@ jobs:
       run: sudo snap install gmailctl
 
     - name: Create Config Directory
-      run: mkdir -p ~/snap/gmailctl/13/.gmailctl
+      run: mkdir -p /root/snap/gmailctl/13/.gmailctl
 
     - name: Create credentials.json
-      run: echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > ~/snap/gmailctl/13/.gmailctl/credentials.json
+      run: echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/credentials.json
 
     - name: Create token.json
-      run: echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > ~/snap/gmailctl/13/.gmailctl/token.json
+      run: echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/token.json
 
     - name: Apply Filters
       run: |
