@@ -12,7 +12,7 @@ local alice = 'alice@jordan-maxwell.info';
 local savedInfoLabel = "Saved Info";
 local serversLabel = "Servers";
 local deliveriesLabel = "Deliveries";
-local shoppingLabel = "shopping";
+local shoppingLabel = "Shopping";
 local financialLabel = "Financial";
 local developmentLabel = "Development";
 
