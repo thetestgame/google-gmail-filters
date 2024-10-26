@@ -43,8 +43,9 @@ local MarkImportant(filters) = {
 
   labels: [
     { name: constants.savedInfoLabel },
+    { name: constants.serversLabel },
     { name: constants.deliveriesLabel },
-    { name: constants.purchasesLabel },
+    { name: constants.shoppingLabel },
     { name: constants.financialLabel },
     { name: constants.developmentLabel },
   ],
@@ -60,8 +61,9 @@ local MarkImportant(filters) = {
     DeleteRule(filters.cleanupFilter),  // Automatically delete old emails
   
     // Automatically sort emails into folders
+    FolderRule(filters.serversFilter, constants.serversLabel),            // Automatically sort server emails into the Servers label
     FolderRule(filters.deliveriesFilter, constants.deliveriesLabel),      // Automatically sort delivery emails into the Shopping/Deliveries label
-    FolderRule(filters.purchasesFilter, constants.purchasesLabel),        // Automatically sort purchase confirmation emails into the Purchase Confirmations labels
+    FolderRule(filters.shoppingFilter, constants.shoppingLabel),          // Automatically sort purchase confirmation emails into the Purchase Confirmations labels
     FolderRule(filters.financialFilter, constants.financialLabel),        // Automatically sort financial emails into the Financial label
     FolderRule(filters.developmentFilter, constants.developmentLabel)     // Automatically sort development emails into the Development label
   ]

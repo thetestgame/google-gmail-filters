@@ -1,11 +1,14 @@
 // This file contains the filters used to automatically sort emails into different labels.
-// It contains filters for important emails, cleanup, deliveries, purchases, financial, development, and spam.
+// It contains filters for important emails, cleanup, deliveries, shopping, financial, development, and spam.
 
 local lib = import 'gmailctl.libsonnet';
 local constants = import 'constants.jsonnet';
 
-local financialEmails = import 'data/financial.json';
 local carrierEmails = import 'data/carriers.json';
+local developmentEmails = import 'data/development.json';
+local financialEmails = import 'data/financial.json';
+local serverEmails = import 'data/servers.json';
+local shoppingEmails = import 'data/shopping.json';
 local spamEmails = import 'data/spam.json';
 
 local importantFilters = {
@@ -30,6 +33,12 @@ local cleanupFilter = {
     { query: "category:forums older_than:3d" },
     { query: "category:updates older_than:3d" },
   ]
+};
+
+// List of filters to use for automatic server email sorting.
+// This is a list of common server email addresses that are used to identify server emails.
+local serversFilter = {
+  or: [{ from: email } for email in serverEmails]
 };
 
 // List of filters to use for automatic delivery email sorting.
@@ -61,37 +70,28 @@ local deliveriesFilter = {
     ],
 };
 
-// List of filters to use for automatic purchase confirmation sorting.
-// This is a list of common purchase confirmation email addresses and subjects
-// that are used to identify purchase confirmation emails.
-local purchasesFilter = {
+// List of filters to use for automatic shopping confirmation sorting.
+// This is a list of common shopping confirmation email addresses and subjects
+// that are used to identify shopping confirmation emails.
+local shoppingFilter = {
     or: [
-        { query: "confirmation" },
-        { query: "receipt" },
-        { query: "order" },
-        { query: "purchase" },
-        { query: "invoice" },
-        { query: "thank you for order" },
-        { query: "order confirmation" },
-        { from: "purchase-noreply@twitch.tv" },
-        { query: "paid, monthly" },
-        { query: "Glitch Productions Store" },
-
-        { from: "support@privacy.com" },
-        { from: "instacart.com" },
-        {
-            subject: "Amazon Web Services Invoice Available",
-            isEscaped: true
-        },
-        { from: "noreply@online.wingstop.com" },
-        { from: "no-reply@doordash.com" },
-        {
-            subject: "Your amazon.com order",
-            isEscaped: true
-        },
-        { from: "no-reply@toppers.com" },
-        { from: "do_not_reply@deltadentalcoversme.com" },
-    ],
+      {
+        or: [
+            { query: "confirmation" },
+            { query: "receipt" },
+            { query: "order" },
+            { query: "purchase" },
+            { query: "invoice" },
+            { query: "thank you for order" },
+            { query: "order confirmation" },
+            { query: "paid, monthly" },
+            { query: "Glitch Productions Store" },
+        ]
+      },
+      {
+        or: [{ from: email } for email in shoppingEmails],
+      }
+    ]
 };
 
 // List of filters to use for automatic financial email sorting.
@@ -104,18 +104,8 @@ local financialFilter = {
 // List of filters to use for automatic development email sorting.
 // This is a list of common development email addresses and subjects
 // that are used to identify development emails.
-//
-// This list ignores emails matching the confirmations filter.
 local developmentFilter = {
-    and: [
-        {
-            or: [
-                { from: "github.com" },
-                { from: "noreply@kronnect.com" },
-            ],
-        },
-        { not: purchasesFilter },
-    ],
+    or: [{ from: email } for email in developmentEmails],
 };
 
 // List of filters to use for automatic spam detection.
@@ -137,8 +127,9 @@ local spamFilter = {
 {
   importantFilters: importantFilters,
   cleanupFilter: cleanupFilter,
+  serversFilter: serversFilter,
   deliveriesFilter: deliveriesFilter,
-  purchasesFilter: purchasesFilter,
+  shoppingFilter: shoppingFilter,
   financialFilter: financialFilter,
   developmentFilter: developmentFilter,
   spamFilter: spamFilter,

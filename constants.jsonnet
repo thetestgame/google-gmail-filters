@@ -10,8 +10,9 @@ local alice = 'alice@jordan-maxwell.info';
 
 // Constants for folder names
 local savedInfoLabel = "Saved Info";
+local serversLabel = "Servers";
 local deliveriesLabel = "Deliveries";
-local purchasesLabel = "Purchases";
+local shoppingLabel = "shopping";
 local financialLabel = "Financial";
 local developmentLabel = "Development";
 
@@ -25,8 +26,9 @@ local developmentLabel = "Development";
 
     // Constants for folder names
     savedInfoLabel: savedInfoLabel,
+    serversLabel: serversLabel,
     deliveriesLabel: deliveriesLabel,
-    purchasesLabel: purchasesLabel,
+    shoppingLabel: shoppingLabel,
     financialLabel: financialLabel,
     developmentLabel: developmentLabel
 }
