@@ -28,10 +28,10 @@ jobs:
       run: mkdir -p /root/snap/gmailctl/13/.gmailctl
 
     - name: Create credentials.json
-      run: echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/credentials.json
+      run: sudo echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/credentials.json
 
     - name: Create token.json
-      run: echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/token.json
+      run: sudo echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/token.json
 
     - name: Apply Filters
       run: |
