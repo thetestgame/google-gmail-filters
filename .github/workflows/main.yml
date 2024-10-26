@@ -29,9 +29,10 @@ jobs:
         echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' | sudo tee /root/snap/gmailctl/13/.gmailctl/credentials.json > /dev/null
         echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' | sudo tee /root/snap/gmailctl/13/.gmailctl/token.json > /dev/null
 
+    - name: Set file permissions
+      run: sudo chown root:root ./filters.jsonnet && sudo chmod 644 ./filters.jsonnet
+
     - name: Init GmailCTL and apply filters
       run: |
-        ls .
-
         sudo gmailctl init
         sudo gmailctl apply -f ./filters.jsonnet -y
