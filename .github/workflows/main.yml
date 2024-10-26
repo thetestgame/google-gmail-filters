@@ -32,4 +32,4 @@ jobs:
     - name: Init GmailCTL and apply filters
       run: |
         sudo gmailctl init
-        sudo gmailctl apply
+        sudo gmailctl apply -f ./filters.jsonnet -y
