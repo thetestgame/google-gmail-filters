@@ -18,22 +18,22 @@ jobs:
     - name: Install jq
       run: sudo apt update && sudo apt install -y jq
 
-    - name: Install Snapd
-      run: sudo apt update && sudo apt install -y snapd
-
-    - name: Install gmailctl with Snap
-      run: sudo snap install gmailctl
-
-    - name: Create Config Directory
-      run: sudo mkdir -p /root/snap/gmailctl/13/.gmailctl
-
-    - name: Create credentials.json
-      run: sudo echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/credentials.json
-
-    - name: Create token.json
-      run: sudo echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/token.json
-
-    - name: Apply Filters
+    - name: Install Snapd and GmailCTL
       run: |
-        sudo gmailctl init
-        sudo gmailctl apply -f filters.jsonnet
+        sudo apt update && sudo apt install -y snapd
+        sudo snap install gmailctl
+
+    - name: Create configuration files
+      run: |
+        sudo su
+        
+        mkdir -p /root/snap/gmailctl/13/.gmailctl
+        echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/credentials.json
+        echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/token.json
+
+    - name: Init GmailCTL and apply filters
+      run: |
+        sudo su
+
+        gmailctl init
+        gmailctl apply -f filters.jsonnet
