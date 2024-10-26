@@ -25,15 +25,11 @@ jobs:
 
     - name: Create configuration files
       run: |
-        sudo su
-        
-        mkdir -p /root/snap/gmailctl/13/.gmailctl
-        echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/credentials.json
-        echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' > /root/snap/gmailctl/13/.gmailctl/token.json
+        sudo mkdir -p /root/.gmailctl
+        echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' | sudo tee /root/.gmailctl/credentials.json > /dev/null
+        echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' | sudo tee /root/.gmailctl/token.json > /dev/null
 
     - name: Init GmailCTL and apply filters
       run: |
-        sudo su
-
-        gmailctl init
-        gmailctl apply -f filters.jsonnet
+        sudo gmailctl init
+        sudo gmailctl apply -f filters.jsonnet
