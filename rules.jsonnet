@@ -57,8 +57,9 @@ local MarkImportant(filters) = {
     MarkImportant(filters.importantFilters),
 
     // Apply our automatic deletion rules
-    DeleteRule(filters.spamFilter),     // Automatically delete emails from known spam senders
-    DeleteRule(filters.cleanupFilter),  // Automatically delete old emails
+    DeleteRule(filters.spamFilter),       // Automatically delete emails from known spam senders
+    DeleteRule(filters.abuseSpamFilter),  // Automatically delete emails that don't belong in my inbox
+    DeleteRule(filters.cleanupFilter),    // Automatically delete old emails
   
     // Automatically sort emails into folders
     FolderRule(filters.serversFilter, constants.serversLabel),            // Automatically sort server emails into the Servers label

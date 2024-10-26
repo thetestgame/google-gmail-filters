@@ -7,6 +7,7 @@ local name = 'Jordan Maxwell';
 local me = 'me@jordan-maxwell.info';
 local spam = 'spam@jordan-maxwell.info';
 local alice = 'alice@jordan-maxwell.info';
+local gmail = 'nxtlabs13@gmail.com';
 
 // Constants for folder names
 local savedInfoLabel = "Saved Info";

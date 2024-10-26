@@ -22,7 +22,7 @@ local importantFilters = {
 local cleanupFilter = {
   or: [
     // Custom
-    { query: "label:deliveries older_than:3d" },
+    { query: "label:servers older_than:3d" },
     { query: "label:financial older_than:3d" },
     { query: "label:development older_than:3d" },
     { query: "label:shopping older_than:3d" },
@@ -85,7 +85,6 @@ local shoppingFilter = {
             { query: "thank you for order" },
             { query: "order confirmation" },
             { query: "paid, monthly" },
-            { query: "Glitch Productions Store" },
         ]
       },
       {
@@ -123,6 +122,17 @@ local spamFilter = {
   ],
 };
 
+// Special filter that handles abuse of how Gmail operates to allow spam. This filter
+// catches all email directed towards my inbox but is not actually addressed to me or any
+// of my aliases. This is a common tactic used by spammers to bypass spam filters.
+local abuseSpamFilter = {
+  and: [
+    { not: me },
+    { not: alice },
+    { not: gmail },
+  ]
+};
+
 // Export the filters for use in other files
 {
   importantFilters: importantFilters,
@@ -133,4 +143,5 @@ local spamFilter = {
   financialFilter: financialFilter,
   developmentFilter: developmentFilter,
   spamFilter: spamFilter,
+  abuseSpamFilter: abuseSpamFilter,
 }
