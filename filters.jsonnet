@@ -127,9 +127,9 @@ local spamFilter = {
 // of my aliases. This is a common tactic used by spammers to bypass spam filters.
 local abuseSpamFilter = {
   and: [
-    { not: me },
-    { not: alice },
-    { not: gmail },
+    { not: { to: constants.me } },
+    { not: { to: constants.alice } },
+    { not: { to: constants.gmail } },
   ]
 };
 

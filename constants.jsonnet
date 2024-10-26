@@ -24,6 +24,7 @@ local developmentLabel = "Development";
     me: me,
     spam: spam,
     alice: alice,
+    gmail: gmail,
 
     // Constants for folder names
     savedInfoLabel: savedInfoLabel,
