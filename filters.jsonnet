@@ -143,7 +143,7 @@ local spamFilter = {
 local FolderRule(filters, label) = {
     filter: filters,
     actions: {
-        archive: false,
+        archive: true,
         markSpam: false,
         delete: false,
         labels: [label],
@@ -180,15 +180,15 @@ local FolderRule(filters, label) = {
 
     // Automatically identify spam emails and delete them.
     // This same rule also handles automatic cleanup of old emails.
-    {
-        filter: {
-            or: [
-              spamFilter,
-              cleanupFilter,
-          ],
-      },
-      actions: { delete: true },
-    },
+    #{
+    #    filter: {
+    #        or: [
+    #          spamFilter,
+    #          cleanupFilter,
+    #      ],
+    #  },
+    #  actions: { delete: true },
+    #},
   
     // Automatically sort emails into folders
     FolderRule(deliveriesFilter, deliveriesLabel),      // Automatically sort delivery emails into the Shopping/Deliveries label
