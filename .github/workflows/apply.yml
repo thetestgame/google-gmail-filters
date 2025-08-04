@@ -1,4 +1,4 @@
-name: apply
+name: Apply Email Filters
 on:
   push:
     branches: [main]
