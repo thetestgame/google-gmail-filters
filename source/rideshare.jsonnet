@@ -46,7 +46,7 @@ local uberRides = {
   },
 };
 
-//
+// Rules defined by this module
 local rules = [
     lyftRides,
     uberRides

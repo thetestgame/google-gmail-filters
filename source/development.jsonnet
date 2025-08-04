@@ -2,21 +2,50 @@
 
 //
 local labels = [
-    'Development / Github'
+    'Development / Github',
+    'Development / Trending',
+    'Development / Pipelines',
 ];
 
-local github = {
+//
+local trending = {
     filter: {
-        from: 'notifications@github.com'
+        and: [
+            { from: 'notifications@github.com' },
+            {
+                or: [
+                    { has: 'new daily trending' },
+                    { has: 'new monthly trending' }
+                ]
+            }
+        ]
     },
     actions: {
-        labels: ['Development / Github'],        
+        labels: ['Development / Trending'],        
     }
 };
 
 //
+local pipelines = {
+    filter: {
+        and: [
+            { from: 'notifications@github.com' },
+            {
+                or: [
+                    { has: 'run failed' }
+                ]
+            }
+        ]
+    },
+    actions: {
+        labels: ['Development / Pipelines'],        
+    }
+};
+
+// Rules defined by this module
 local rules = [
-    github
+    trending,
+    pipelines
 ];
 
 // Export the file values.

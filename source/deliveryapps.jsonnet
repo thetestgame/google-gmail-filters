@@ -24,7 +24,7 @@ local doordash = {
   },
 };
 
-//
+// Rules defined by this module
 local rules = [
     doordash
 ];

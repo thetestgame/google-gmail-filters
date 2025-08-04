@@ -3,6 +3,7 @@
 // 
 local labels = [
   'Jobs / Recruiters',
+  'Jobs / LinkedIn',
 ];
 
 local recruiters = {
@@ -60,9 +61,21 @@ local recruiters = {
   },
 };
 
-// 
+local linkedin = {
+  filter: {
+    from: 'messages-noreply@linkedin.com'
+  },
+  actions: {
+    archive: true,
+    markRead: true,
+    labels: ['Jobs / LinkedIn']
+  }
+};
+
+// Rules defined by this module
 local rules = [
-  recruiters
+  recruiters,
+  linkedin
 ];
 
 // Export the file values.

@@ -2,21 +2,25 @@
 
 local lib = import 'gmailctl.libsonnet';
 local constants = import 'source/constants.jsonnet';
-local jobmarket = import 'source/jobmarket.jsonnet';
-local rideshare = import 'source/rideshare.jsonnet';
+
+local deliveries = import 'source/deliveries.jsonnet';
 local deliveryapps = import 'source/deliveryapps.jsonnet';
 local development = import 'source/development.jsonnet';
+local jobmarket = import 'source/jobmarket.jsonnet';
+local rideshare = import 'source/rideshare.jsonnet';
 
 // Labels used by this email address.
 local labels = [
-    jobmarket.labels,
-    rideshare.labels,
+    deliveries.labels,
     deliveryapps.labels,
     development.labels,
+    jobmarket.labels,
+    rideshare.labels,
 ];
 
 // Rules used by this email address.
 local rules = [
+  deliveries.rules,
   jobmarket.rules,
   rideshare.rules,
   deliveryapps.rules,
