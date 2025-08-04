@@ -46,6 +46,9 @@ local packages = {
             // Common delivery services
             { or: [{ from: email } for email in carrierEmails] },
         ],
+    },
+    actions: {
+        labels: ['Deliveries / Packages']
     }
 };
 
