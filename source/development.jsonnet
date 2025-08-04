@@ -21,6 +21,7 @@ local trending = {
         ]
     },
     actions: {
+        archive: true,
         labels: ['Development / Trending'],        
     }
 };
@@ -38,6 +39,7 @@ local pipelines = {
         ]
     },
     actions: {
+        archive: true,
         labels: ['Development / Pipelines'],        
     }
 };

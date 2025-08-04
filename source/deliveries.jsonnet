@@ -48,6 +48,7 @@ local packages = {
         ],
     },
     actions: {
+        archive: true,
         labels: ['Deliveries / Packages']
     }
 };
