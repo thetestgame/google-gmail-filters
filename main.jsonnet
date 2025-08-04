@@ -11,6 +11,10 @@ local rideshare = import 'source/rideshare.jsonnet';
 
 // Labels used by this email address.
 local labels = [
+    // Common labels
+    constants.labels,
+
+    // Module labels
     deliveries.labels,
     deliveryapps.labels,
     development.labels,
