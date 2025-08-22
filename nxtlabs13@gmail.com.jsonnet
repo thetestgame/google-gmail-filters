@@ -16,11 +16,7 @@ local labels = [{ name: l } for l in [
   'Development / Github',
   'Development / Pipelines',
   'Development / Trending',
-  'Development / Servers'.
-  'Newsletter / Reading',
-  'Newsletter / SF',
-  'Newsletter / NYC',
-  'Newsletter / Shopping',
+  'Development / Servers',
   'Jobs / Linkedin',
   'Jobs / Recruiters',
   'Rideshare / Lyft',
