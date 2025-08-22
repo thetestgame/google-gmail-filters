@@ -4,6 +4,7 @@ local lib = import 'gmailctl.libsonnet';
 local framework = import 'modules/framework.jsonnet';
 local recruiters = import 'modules/recruiters.jsonnet';
 local deliveries = import 'modules/deliveries.jsonnet';
+local servers = import 'modules/servers.jsonnet';
 
 local labels = [{ name: l } for l in [
   '+ Important',

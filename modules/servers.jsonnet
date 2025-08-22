@@ -1,5 +1,4 @@
 local serverEmails = [
-    [
     "aws.amazon.com",
     "azure.microsoft.com",
     "digitalocean.com"
