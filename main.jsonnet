@@ -1,4 +1,3 @@
-//
 
 local lib = import 'gmailctl.libsonnet';
 local framework = import 'modules/framework.jsonnet';
