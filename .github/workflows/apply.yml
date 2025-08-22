@@ -12,27 +12,25 @@ jobs:
     name: Setup and Deploy Filters
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-    
-    - name: Set file permissions
-      run: sudo find . -type f -exec chmod 644 {} \; && sudo find . -type d -exec chmod 755 {} \;
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ">=1.20.0"
+
+      - name: Install gmailctl
+        run: go install github.com/mbrt/gmailctl/cmd/gmailctl@latest
+
+      - name: Install credentials
+        run: |
+          mkdir "$HOME/.gmailctl"
+          echo "$TOKEN" > "$HOME/.gmailctl/token.json"
+          echo "$CREDENTIALS" > "$HOME/.gmailctl/credentials.json"
+        env:
+          TOKEN: ${{ secrets.GMAILCTL_TOKEN }}
+          CREDENTIALS: ${{ secrets.GMAILCTL_CREDENTIALS }}
   
-    - name: Install jq
-      run: sudo apt update && sudo apt install -y jq
-  
-    - name: Install Snapd and GmailCTL
-      run: |
-        sudo apt update && sudo apt install -y snapd
-        sudo snap install gmailctl
-  
-    - name: Create configuration files
-      run: |
-        sudo mkdir -p /root/snap/gmailctl/13/.gmailctl
-        echo '${{ secrets.GMAILCTL_CREDENTIALS }}' | jq '.' | sudo tee /root/snap/gmailctl/13/.gmailctl/credentials.json > /dev/null
-        echo '${{ secrets.GMAILCTL_TOKEN }}' | jq '.' | sudo tee /root/snap/gmailctl/13/.gmailctl/token.json > /dev/null
-  
-    - name: Init GmailCTL and apply filters
-      run: |
-        sudo bash -c "gmailctl init"
-        sudo bash -c "gmailctl apply -f ./main.jsonnet -y"
+      - name: Update token
+        run: gmailctl init --refresh-expired
+
+      - name: Apply changes
+        run: gmailctl apply --yes --remove-labels -f main.jsonnet
