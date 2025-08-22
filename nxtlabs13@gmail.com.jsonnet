@@ -16,6 +16,7 @@ local labels = [{ name: l } for l in [
   'Development / Github',
   'Development / Pipelines',
   'Development / Trending',
+  'Development / Servers'.
   'Newsletter / Reading',
   'Newsletter / SF',
   'Newsletter / NYC',
@@ -51,8 +52,7 @@ local labels = [{ name: l } for l in [
     // Automatically sort emails into folders
     framework.FolderRule(recruiters.filters, 'Jobs / Recruiters'),
     framework.FolderRule(deliveries.filters, 'Deliveries / Packages'),
-    //FolderRule(filters.serversFilter, constants.serversLabel),            // Automatically sort server emails into the Servers label
-    //FolderRule(filters.deliveriesFilter, constants.deliveriesLabel),      // Automatically sort delivery emails into the Shopping/Deliveries label
+    framework.FolderRule(servers.filters, 'Development / Servers'),
     //FolderRule(filters.shoppingFilter, constants.shoppingLabel),          // Automatically sort purchase confirmation emails into the Purchase Confirmations labels
     //FolderRule(filters.financialFilter, constants.financialLabel),        // Automatically sort financial emails into the Financial label
     //FolderRule(filters.developmentFilter, constants.developmentLabel)     // Automatically sort development emails into the Development label
