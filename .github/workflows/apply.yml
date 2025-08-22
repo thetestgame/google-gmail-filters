@@ -61,8 +61,8 @@ jobs:
           echo "$TOKEN" > "$HOME/.gmailctl/token.json"
           echo "$CREDENTIALS" > "$HOME/.gmailctl/credentials.json"
         env:
-          TOKEN: ${{ secrets.GMAIL_TOKEN }}
-          CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
+          TOKEN: ${{ secrets.GMAILCTL_TOKEN }}
+          CREDENTIALS: ${{ secrets.GMAILCTL_CREDENTIALS }}
 
       - name: Update token
         run: gmailctl init --refresh-expired
