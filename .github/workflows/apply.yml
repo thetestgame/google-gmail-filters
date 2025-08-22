@@ -33,4 +33,4 @@ jobs:
         run: gmailctl init --refresh-expired
 
       - name: Apply changes
-        run: gmailctl apply -f main.jsonnet -y
+        run: gmailctl apply --remove-labels -f main.jsonnet -y
