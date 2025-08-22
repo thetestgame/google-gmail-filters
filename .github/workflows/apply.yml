@@ -1,14 +1,50 @@
-name: Apply Email Filters
+name: apply
 on:
   push:
     branches: [main]
 
 jobs:
+  changed-emails:
+    name: changed-emails
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+
+    # Output list of changed email files as a JSON array. This will be used as
+    # the input for the matrix for environments to apply.
+    outputs:
+      emails: ${{ steps.emails.outputs.list }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          list-files: json
+          filters: |
+            emails: '*.jsonnet'
+
+      # Trim the trailing `.jsonnet` extension from the emails
+      - name: Normalize emails
+        id: emails
+        run: |
+          list="$(echo '${{ steps.filter.outputs.emails_files }}' | jq -rc 'map(sub(".jsonnet$"; ""))')"
+          echo "list=${list}" >> $GITHUB_OUTPUT
+
   apply:
-    name: Apply Email Filters
+    name: apply for ${{ matrix.email }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
+    needs: changed-emails
+    if: ${{ needs.changed-emails.outputs.emails != '[]' }}
+
+    strategy:
+      matrix:
+        email: ${{ fromJson(needs.changed-emails.outputs.emails) }}
+
+    environment: ${{ matrix.email }}
 
     steps:
       - uses: actions/checkout@v3
@@ -25,15 +61,15 @@ jobs:
           echo "$TOKEN" > "$HOME/.gmailctl/token.json"
           echo "$CREDENTIALS" > "$HOME/.gmailctl/credentials.json"
         env:
-          TOKEN: ${{ secrets.GMAILCTL_TOKEN }}
-          CREDENTIALS: ${{ secrets.GMAILCTL_CREDENTIALS }}
+          TOKEN: ${{ secrets.GMAIL_TOKEN }}
+          CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
 
       - name: Update token
         run: gmailctl init --refresh-expired
 
       - name: Produce filter diff
         run: |
-          gmailctl diff -f main.jsonnet 2>&1 | tee filters.diff
+          gmailctl diff -f ${{ matrix.email }}.jsonnet 2>&1 | tee filters.diff
 
       - name: Read diff output into variable
         uses: actions/github-script@v6
@@ -44,5 +80,16 @@ jobs:
             return fs.readFileSync('filters.diff','utf8').toString();
           result-encoding: string
 
+      - name: Create commit comment
+        uses: peter-evans/commit-comment@v2
+        with:
+          token: ${{ secrets.github_token }}
+          body: |
+            The following changes are applied to **${{ matrix.email }}** by this commit
+
+            ```diff
+            ${{ steps.diff.outputs.result }}
+            ```
+
       - name: Apply changes
-        run: gmailctl apply --yes --remove-labels -f main.jsonnet
+        run: gmailctl apply --yes --remove-labels -f ${{ matrix.email }}.jsonnet
